@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Analyzer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="text-analyzer-container">
+    <h2>Text Analyzer</h2>
+    <textarea id="textInput" rows="6" placeholder="Enter your text here..."></textarea>
+    <button id="analyzeButton">Analyze</button>
+    <div id="result" class="result">
+      <!-- Results will be displayed here -->
+    </div>
+  </div>
+</body>
+</html>
+<script>
+   function analyzeText(input) {
+    if (typeof input !== 'string') throw new Error('Input must be a string');
+  
+    const trimmed = input.trim();
+    const isEmpty = trimmed.length === 0;
+  
+    return {
+      length: trimmed.length,
+      hasNumbers: /\d/.test(trimmed),
+      isEmpty,
+      words: trimmed ? trimmed.split(/\s+/) : []
+    };
+  }
+
+    document.getElementById('analyzeButton').addEventListener('click', function() {
+  const input = document.getElementById('textInput').value;
+  try {
+    const result = analyzeText(input);
+    document.getElementById('result').innerHTML = `
+      <p><span class="key">Length:</span> <span class="value">${result.length}</span></p>
+      <p><span class="key">Contains Numbers:</span> <span class="value">${result.hasNumbers}</span></p>
+      <p><span class="key">Is Empty:</span> <span class="value">${result.isEmpty}</span></p>
+      <p><span class="key">Words:</span> <span class="value">${result.words.join(', ')}</span></p>
+    `;
+  } catch (error) {
+    document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+  }
+
+});
+
+  </script>
