@@ -41,8 +41,8 @@ describe('Testing /validateSignUp',()=>{
                 last_name: 'User',
                 email: 'test@example.com',
                 phone_number: '0123456789',
-                password: 'password123',
-                'confirm-password': 'password123',
+                password: 'Password_123',
+                'confirm-password': 'Password_123',
                 gender: 'Male'
             });
 
@@ -62,7 +62,7 @@ describe('Testing /validateSignUp',()=>{
             'confirm-password': 'password123',
             gender: 'Male'
         });
-        expect(response.text).toContain('Error:');
+        expect(response.text).toContain('Weak password');
     })
 
 })
@@ -122,8 +122,8 @@ describe('Testing /validateIn', () => {
            
         });
 
-        expect(res.status).toBe(200);
-        expect(res.text).toContain("\/"); // triggered from the catch block
+        expect(res.status).toBe(400);
+        expect(res.text).toContain("Invalid input"); // triggered from the catch block
     });
 
     it('should return script with error alert if database query fails', async () => {
@@ -133,10 +133,8 @@ describe('Testing /validateIn', () => {
             password: '123456'
         });
 
-        expect(res.status).toBe(200);
-        expect(res.text).toContain("alert(");
-        expect(res.text).toMatch(/Error:/);
-        expect(res.text).toContain("window.location.href = '/'");
+        expect(res.status).toBe(400);
+        expect(res.text).toContain("Invalid input");
     });
 });
 
@@ -156,7 +154,7 @@ describe('GET static pages', () => {
 
     it('should serve home.html on GET /home', async () => {
         const res = await request(app).get('/home');
-        expect(res.status).toBe(200);
-        expect(res.text).toContain('<!DOCTYPE html>');
+        expect(res.status).toBe(401);
+        
     });
 });

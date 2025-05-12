@@ -25,8 +25,8 @@ describe('Security Tests', () => {
                 .post('/validateIn')
                 .send(maliciousPayload);
             
-            expect(response.status).toBe(200);
-            expect(response.text).toContain('alert');
+            expect(response.status).toBe(400);
+            expect(response.text).toContain('Invalid input');
         });
     });
 
@@ -37,7 +37,8 @@ describe('Security Tests', () => {
                 last_name: 'Test',
                 email: 'test@test.com',
                 phone_number: '1234567890',
-                password: 'password123',
+                password: 'Password_123',
+                'confirm-password':'Password_123',
                 gender: 'Male'
             };
 
@@ -57,14 +58,15 @@ describe('Security Tests', () => {
                 email: 'invalid-email',
                 phone_number: '1234567890',
                 password: 'password123',
+                'confirm-password':'password123',
                 gender: 'Male'
             };
 
             const response = await request(app)
-                .post('/api/users')
+                .post('/validateSignUp')
                 .send(invalidEmail);
 
-            expect(response.status).toBe(201);
+            expect(response.status).toBe(400);
         });
 
         it('validate strong password ', async () => {
@@ -73,15 +75,16 @@ describe('Security Tests', () => {
                 last_name: 'User',
                 email: 'test@test.com',
                 phone_number: '1234567890',
-                password: '123', // Too short
+                password: '123',  // too weak
+                'confirm-password': '123', // important
                 gender: 'Male'
             };
 
             const response = await request(app)
-                .post('/api/users')
+                .post('/validateSignUp')
                 .send(weakPassword);
 
-            expect(response.status).toBe(201);
+            expect(response.status).toBe(400);
         });
     });
 
@@ -90,11 +93,11 @@ describe('Security Tests', () => {
             const response = await request(app)
                 .get('/home');
 
-            expect(response.status).toBe(200);
+            expect(response.status).toBe(401);
         });
 
         it('prevent brute force attacks', async () => {
-            const loginAttempts = Array(5).fill({
+            const loginAttempts = Array(10).fill({
                 email: 'test@test.com',
                 password: 'wrongpassword'
             });
@@ -113,8 +116,7 @@ describe('Security Tests', () => {
                     password: 'wrongpassword'
                 });
 
-            expect(response.status).toBe(200);
-            expect(response.text).toContain('alert');
+            expect(response.status).toBe(429);
         });
     });
 
