@@ -123,13 +123,12 @@ describe('Testing /validateIn', () => {
         });
 
         expect(res.status).toBe(400);
-        expect(res.text).toContain("Invalid input"); // triggered from the catch block
+        expect(res.text).toContain("Invalid input"); 
     });
 
     it('should return script with error alert if database query fails', async () => {
-        // Cause Mongoose to fail by passing an invalid query type
         const res = await request(app).post('/validateIn').send({
-            email: { $invalidOperator: true }, // This should break the query
+            email: { $invalidOperator: true },
             password: '123456'
         });
 
@@ -143,7 +142,7 @@ describe('GET static pages', () => {
     it('should serve signin.html on GET /', async () => {
         const res = await request(app).get('/');
         expect(res.status).toBe(200);
-        expect(res.text).toContain('<!DOCTYPE html>'); // Assumes HTML file starts with DOCTYPE
+        expect(res.text).toContain('<!DOCTYPE html>');
     });
 
     it('should serve signup.html on GET /sign', async () => {

@@ -12,7 +12,7 @@ beforeEach(async()=>{
 })
 
 afterAll(async()=>{
-    //await productModel.deleteMany({});
+    
     await userModel.deleteMany({ email: "aly@g.com" },{email:"lash@g.com"});
     await monogoose.connection.close();
     

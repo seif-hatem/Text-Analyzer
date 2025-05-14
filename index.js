@@ -95,7 +95,8 @@ app.post('/validateSignUp',async (req,res)=>{
     if (!validator.isEmail(user.email)) {
         return res.status(400).send('Invalid email format');
     }
-    
+    console.log(user.password)
+    console.log(validator.isStrongPassword(user.password))
     if (!validator.isStrongPassword(user.password, { minLength: 8 })) {
         return res.status(400).send('Weak password');
     }
@@ -104,6 +105,7 @@ app.post('/validateSignUp',async (req,res)=>{
         const newUser = await userModel.create(user);
 
         if (newUser) {
+            req.session.user = user.email;
             return res.redirect('/home');
         } else {
             return res.send(`<script>alert('Error: Unable to sign up.'); window.location.href = '/sign';</script>`);
